@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<klayout-macro>
+ <description/>
+ <version/>
+ <category>pymacros</category>
+ <prolog/>
+ <epilog/>
+ <doc/>
+ <autorun>true</autorun>
+ <autorun-early>false</autorun-early>
+ <priority>0</priority>
+ <shortcut/>
+ <show-in-menu>false</show-in-menu>
+ <group-name/>
+ <menu-path/>
+ <interpreter>python</interpreter>
+ <dsl-interpreter-name/>
+ <text>import os 
+import sys
+import pya
+from   importlib import reload  
+
+libPath  = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "python"))
+comPathL = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "common"))
+comPathG = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "..", "common"))
+iconPath = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "icon"))
+
+for importPath in [libPath, comPathL if os.path.exists(comPathL) else comPathG]:
+    if not importPath in sys.path:
+        sys.path.insert(0, importPath)
+        
+import misc_002
+import snapHandler_002   
+import markerTheme_002
+import markerHandler_002
+import objInRangeHandler_001
+import hoverRulerPlugin
+    
+reload(misc_002)
+reload(snapHandler_002)
+reload(markerTheme_002)
+reload(markerHandler_002)
+reload(objInRangeHandler_001)
+reload(hoverRulerPlugin)
+
+class HoverRulerPluginFactory(pya.PluginFactory):
+    def __init__(self):
+        super(HoverRulerPluginFactory, self).__init__()
+        self.register(-1000, "hover_ruler_factory", "Hover Ruler", iconPath + "/icon.png" )
+        
+    def create_plugin(self, manager, root, view):
+        return hoverRulerPlugin.HoverRulerPlugin(view)
+
+HoverRulerPluginFactory.instance = HoverRulerPluginFactory()</text>
+</klayout-macro>
