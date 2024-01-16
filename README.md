@@ -13,12 +13,16 @@ Currently not avaliable on Klayout.salt, package needs to be manual installed.
 # Functions 
 * Shows edge length while hovered
 * Drop ruler automatically on left click
-
-# Upcomming features (Planning)
 * Show corner angle on hover
+  
+# Upcomming features (Planning)
 * Detect rounded corner radius on hover
+
+# Remark
+* Marker Text shows differently between Win/Linux platform (Win small box at text origin / Linux text with bound box)
 
 # Changelog
 ### 0.00
 Patch plugin fails to start up issue.
+Patch with Redo/undo for measurement
 
