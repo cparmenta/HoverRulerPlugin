@@ -3,7 +3,7 @@
  <name>HoverRulerPlugin/klayout</name>
  <token/>
  <hidden>false</hidden>
- <version>0.00</version>
+ <version>0.1</version>
  <api-version/>
  <title>Ruler plugin</title>
  <doc>Shows edge length on hover</doc>
