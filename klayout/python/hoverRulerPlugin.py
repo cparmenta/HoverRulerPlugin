@@ -7,10 +7,15 @@ import markerHandler_002     as mkHdl
 import markerTheme_002       as mkThm 
 import objInRangeHandler_001 as oirHdl
 
+# from PyQt5.QtCore import QObject, QEvent
+
+
+
 class HoverRulerPlugin(pya.Plugin):
     def __init__(self, view):
         super(HoverRulerPlugin, self).__init__()
         self.snapResult    = snHdl.SnapResults()
+        self.catcher = None
         self.initiallize(view)
                
     def initiallize(self, view):        
@@ -18,6 +23,7 @@ class HoverRulerPlugin(pya.Plugin):
         self.snapHandler     = snHdl.SnapHandler(self.view)        
         self.objInRngHdl     = oirHdl.ObjInRangeHandler(self.view)
         self.markerManager   = mkHdl.MarkerManager([self.snapHandler])
+        self.annotation_mode = 0
               
     def activated(self):
         self.initiallize(self.view)
@@ -84,7 +90,8 @@ class HoverRulerPlugin(pya.Plugin):
                         self.view.create_measure_ruler(snapPoint)
                         
                 finally : self.view.commit()
-
+            elif (buttons & misc.Keys.right):
+                self.annotation_mode = (self.annotation_mode + 1) % 4
             return True
         return False   
                 
@@ -103,7 +110,14 @@ class HoverRulerPlugin(pya.Plugin):
             self.snapResult = snapResult
             
             if snappedEdge:
-                self.snapHandler.markPropsAppend(mkThm.textMark(snapPoint, f"  {round(snappedEdge.length(), digit)}um", 0))
+                if self.annotation_mode == 0:
+                    self.snapHandler.markPropsAppend(mkThm.textMark(snapPoint, f" d = {round(snappedEdge.length(), digit)}", 0))
+                elif self.annotation_mode == 1:
+                    self.snapHandler.markPropsAppend(mkThm.textMark(snapPoint, f" dx = {round(snappedEdge.dx(), digit)}, dy = {round(snappedEdge.dy(), digit)}", 0))
+                elif self.annotation_mode == 2:
+                    self.snapHandler.markPropsAppend(mkThm.textMark(snapPoint, f" a = {round(math.atan2(abs(snappedEdge.dy()),abs(snappedEdge.dx()))*180/math.pi, digit)}", 0))
+                else:
+                    self.snapHandler.markPropsAppend(mkThm.textMark(snapPoint, f" 90-a = {round(90 - math.atan2(abs(snappedEdge.dy()),abs(snappedEdge.dx()))*180/math.pi, digit)}", 0))
             
             if snappedVertex:
             
